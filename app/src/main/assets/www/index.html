@@ -16,17 +16,15 @@
 
 <div id="container"></div>
 
-<div id="controls">
-    <i class="fa fa-play-circle" id="playBtn" onclick="startAnimation()"></i>
-    <i class="fa fa-stop-circle" id="stopBtn" onclick="stopAnimation()"></i><br/>
+<div id="controls"><i class="fa fa-play-circle" id="playBtn" onclick="startAnimation()"></i><i class="fa fa-stop-circle" id="stopBtn" onclick="stopAnimation()"></i><br/>
 </div>
 <div id="settings" class="setting">
-    <div class="col-1-3"><i class="fa fa-minus-square" onclick="incRound(-5)"></i> </div>
+    <div class="col-1-3"><i class="fa fa-minus-square" onclick="incRound(-5)"></i></div>
     <div class="col-1-3"><span id="numSecsRound">1</span> sec</div>
     <div class="col-1-3"><i class="fa fa-plus-square" onclick="incRound(5)"></i></div><br/>
     <div class="col-1-3"><i class="fa fa-minus-square" onclick="incPause(-1)"></i></div>
-    <div class="col-1-3">    <span id="numSecsPause">1</span> sec </div>
-    <div class="col-1-3">   <i class="fa fa-plus-square"  onclick="incPause(1)"></i></div>
+    <div class="col-1-3"><span id="numSecsPause">1</span> sec</div>
+    <div class="col-1-3"><i class="fa fa-plus-square"  onclick="incPause(1)"></i></div>
 </div>
 
 <script language="JavaScript">
@@ -44,10 +42,10 @@
     var current = 1; // 0 ... pause, 1 ... round
 
     var bar = new ProgressBar.Circle(container, {
-        strokeWidth: 12,
+        strokeWidth: 16,
         color: '#225378',
-        trailColor: '#225378',
-        trailWidth: 1,
+        // trailColor: '#225378',
+        // trailWidth: 1,
         easing: 'linear',
         duration: 1000 * roundLength,
         svgStyle: null,
@@ -75,7 +73,7 @@
                     lastValue = value;
                 }
             } else {
-                bar.setText("wait");
+                bar.setText('<i class="fa fa-pause"></i>');
             }
 
 
@@ -89,6 +87,7 @@
     function stopAnimation() {
         // reset state:
         bar.set(0);
+        bar.setText('');
         current = 1;
         $('#settings').show();
         $('#playBtn').show();
