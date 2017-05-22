@@ -80,7 +80,7 @@
             // bar.text.style.color = state.color;
         }
     });
-    bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
+    bar.text.style.fontFamily = '"Raleway", "Droid Sans", Helvetica, sans-serif';
     bar.text.style.fontSize = '24vw';
 
 
@@ -103,9 +103,9 @@
 
     function nextAnimation() {
         bar.set(0);
-        if (current == 0) { // it's a pause
+        if (current == 0 || pauseLength == 0) { // we are coming from a pause or there is none.
             current = 1; // set to round
-            beep.play();
+            if (pauseLength > 0) beep.play(); // start with a beep only if there was a pause in advance.
             bar.animate(1.0, {duration: roundLength * 1000, color: '#225378'},
                 function () {
                     tada.play();
@@ -124,6 +124,8 @@
 
     function incRound(seconds) {
         roundLength += seconds;
+        roundLength = Math.max(roundLength, 5);
+        roundLength = Math.min(roundLength, 600);
         $("#numSecsRound").text(roundLength);
         $("#numSecsPause").text(pauseLength);
         localStorage.setItem("roundLength", roundLength);
@@ -132,6 +134,8 @@
 
     function incPause(seconds) {
         pauseLength += seconds;
+        pauseLength = Math.max(pauseLength, 0);
+        pauseLength = Math.min(pauseLength, 99);
         $("#numSecsRound").text(roundLength);
         $("#numSecsPause").text(pauseLength);
         localStorage.setItem("roundLength", roundLength);
