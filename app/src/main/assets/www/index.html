@@ -15,6 +15,7 @@
 </head>
 <body>
 
+<div id="workout"></div>
 <div id="container"></div>
 
 <div id="controls"><i class="fa fa-play-circle" id="playBtn" onclick="startAnimation()"></i><i
@@ -109,9 +110,11 @@
         bar.set(0);
         bar.setText('');
         current = 1;
+        currentRound = 0;
         $('#settings').show();
         $('#playBtn').show();
         $('#stopBtn').hide();
+        $('#workout').text('');
     }
 
     function startAnimation() {
@@ -128,7 +131,8 @@
             if (announceWorkout && currentRound < workoutArray.length) {
                 Android.announceWorkout(workoutArray[currentRound]);
                 console.log(workoutArray[currentRound]);
-            }
+                $('#workout').text(workoutArray[currentRound]);
+            } else $('#workout').text('');
             currentRound++;
             if (pauseLength > 0 && announceWorkout == 0) beep.play(); // start with a beep only if there was a pause in advance.
             bar.animate(1.0, {duration: roundLength * 1000, color: '#225378'},
@@ -141,7 +145,8 @@
             if (announceWorkout && currentRound < workoutArray.length) {
                 console.log("Next up: " + workoutArray[currentRound]);
                 Android.announceWorkout("Next up: " + workoutArray[currentRound]);
-            }
+                $('#workout').text(workoutArray[currentRound]);
+            } else $('#workout').text('');
             bar.animate(1.0, {duration: pauseLength * 1000, color: '#EB7F00'},
                 function () {
                     // tada.play();
