@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Simple Interval Timer</title>
     <link rel="manifest" href="manifest.json">
-    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600,800,900" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600,800,900"
+          rel="stylesheet" type="text/css">
     <script language="JavaScript" src="js/progressbar.min.js"></script>
     <script language="JavaScript" src="js/jquery-3.2.1.min.js"></script>
     <link href="./font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
@@ -16,25 +17,44 @@
 
 <div id="container"></div>
 
-<div id="controls"><i class="fa fa-play-circle" id="playBtn" onclick="startAnimation()"></i><i class="fa fa-stop-circle" id="stopBtn" onclick="stopAnimation()"></i><br/>
+<div id="controls"><i class="fa fa-play-circle" id="playBtn" onclick="startAnimation()"></i><i
+        class="fa fa-stop-circle" id="stopBtn" onclick="stopAnimation()"></i><br/>
 </div>
 <div id="settings" class="setting">
     <div class="col-1-3"><i class="fa fa-minus-square" onclick="incRound(-5)"></i></div>
     <div class="col-1-3"><span id="numSecsRound">1</span> sec</div>
-    <div class="col-1-3"><i class="fa fa-plus-square" onclick="incRound(5)"></i></div><br/>
+    <div class="col-1-3"><i class="fa fa-plus-square" onclick="incRound(5)"></i></div>
+    <br/>
     <div class="col-1-3"><i class="fa fa-minus-square" onclick="incPause(-1)"></i></div>
     <div class="col-1-3"><span id="numSecsPause">1</span> sec</div>
-    <div class="col-1-3"><i class="fa fa-plus-square"  onclick="incPause(1)"></i></div>
+    <div class="col-1-3"><i class="fa fa-plus-square" onclick="incPause(1)"></i></div>
+    <br/>
+    <div class="col-1-3"><i class="fa fa-square-o" id="workoutBtn" onclick="toggleWorkout()"></i>
+    </div>
+    <div class="col-2-3" align="left">7M workout</div>
 </div>
 
 <script language="JavaScript">
     // todo: audio is not playing on Android's Chromium ...
-    if (localStorage.getItem("roundLength") === null || localStorage.getItem("pauseLength") === null ) {
+    if (localStorage.getItem("roundLength") === null || localStorage.getItem("pauseLength") === null || localStorage.getItem("announceWorkout") === null) {
         localStorage.setItem("roundLength", 30);
         localStorage.setItem("pauseLength", 5);
+        localStorage.setItem("announceWorkout", 0);
     }
     var roundLength = Number(localStorage.getItem("roundLength"));
     var pauseLength = Number(localStorage.getItem("pauseLength"));
+    var announceWorkout = Number(localStorage.getItem("announceWorkout"));
+
+    if (announceWorkout == 0) {
+        $("#workoutBtn").attr('class', 'fa fa-square-o');
+    }
+    else {
+        $("#workoutBtn").attr('class', 'fa fa-check-square-o');
+    }
+
+    var workoutArray = ["Jumping Jacks", "Wall Sit", "Push-Ups", "Abdominal Crunch", "Step Up", "Squat", "Triceps Dip", "Plank", "High Knees", "Lunge", "Push-Up Rotation", "Side Plank", "Change Sides"];
+    var currentRound = 0;
+
     var beep = new Audio("sfx/beep.wav");
     var tada = new Audio("sfx/tada.wav");
     var iuh = new Audio("sfx/iuh.wav");
@@ -105,7 +125,12 @@
         bar.set(0);
         if (current == 0 || pauseLength == 0) { // we are coming from a pause or there is none.
             current = 1; // set to round
-            if (pauseLength > 0) beep.play(); // start with a beep only if there was a pause in advance.
+            if (announceWorkout && currentRound < workoutArray.length) {
+                Android.announceWorkout(workoutArray[currentRound]);
+                console.log(workoutArray[currentRound]);
+            }
+            currentRound++;
+            if (pauseLength > 0 && announceWorkout == 0) beep.play(); // start with a beep only if there was a pause in advance.
             bar.animate(1.0, {duration: roundLength * 1000, color: '#225378'},
                 function () {
                     tada.play();
@@ -113,6 +138,10 @@
                 });  // Number from 0.0 to 1.0
         } else {
             current = 0; // set to pause;
+            if (announceWorkout && currentRound < workoutArray.length) {
+                console.log("Next up: " + workoutArray[currentRound]);
+                Android.announceWorkout("Next up: " + workoutArray[currentRound]);
+            }
             bar.animate(1.0, {duration: pauseLength * 1000, color: '#EB7F00'},
                 function () {
                     // tada.play();
@@ -147,6 +176,19 @@
         $("#numSecsRound").text(roundLength);
         $("#numSecsPause").text(pauseLength);
     });
+
+    function toggleWorkout() {
+        if (announceWorkout > 0) {
+            announceWorkout = 0;
+            $("#workoutBtn").attr('class', 'fa fa-square-o');
+        }
+        else {
+            announceWorkout = 1;
+            $("#workoutBtn").attr('class', 'fa fa-check-square-o');
+        }
+        localStorage.setItem("announceWorkout", announceWorkout);
+    }
+
 </script>
 </body>
 </html>

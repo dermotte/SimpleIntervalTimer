@@ -7,9 +7,9 @@
 
 
 #container {
-    margin: 32px;
-    /* width: 90%;
-    height: 100px; */
+    margin: 16pt;
+    width: 90%;
+    height: 90%;
 }
 
 #controls {
@@ -26,7 +26,7 @@
 
 #settings {
     margin-top: 3vw;
-    font-size: 8vw;
+    font-size: 6vw;
     /*color: #ACF0F2;*/
     /*color: #1695A3;*/
     color: #225378;
@@ -41,6 +41,7 @@ body {
 }
 
 [class*='col-'] {
+    margin-top: 3pt;
     float: left;
 }
 
