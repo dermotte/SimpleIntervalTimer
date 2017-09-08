@@ -68,7 +68,7 @@ body {
 }
 
 [class*='col-'] {
-    margin-top: 3pt;
+    margin-top: 2vw;
     float: left;
 }
 

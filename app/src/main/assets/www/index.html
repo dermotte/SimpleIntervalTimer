@@ -28,6 +28,9 @@
     <br/>
     <div class="col-1-3"><i id="workoutBtn" class="fa fa-square-o" onclick="toggleWorkout()"></i></div>
     <div class="col-2-3" align="left">7M workout</div>
+    <br/>
+    <div class="col-1-3"><i id="soundBtn" class="fa fa-square-o" onclick="toggleSound()"></i></div>
+    <div class="col-2-3" align="left">play sounds</div>
 </div>
 
 <div id="workout"></div>
@@ -52,20 +55,29 @@
 
 <script language="JavaScript">
     // todo: audio is not playing on Android's Chromium ...
-    if (localStorage.getItem("roundLength") === null || localStorage.getItem("pauseLength") === null || localStorage.getItem("announceWorkout") === null) {
+    if (localStorage.getItem("roundLength") === null || localStorage.getItem("pauseLength") === null || localStorage.getItem("announceWorkout") === null || localStorage.getItem("playSound") === null) {
         localStorage.setItem("roundLength", 30);
         localStorage.setItem("pauseLength", 5);
         localStorage.setItem("announceWorkout", 0);
+        localStorage.setItem("playSound", 1);
     }
     var roundLength = Number(localStorage.getItem("roundLength"));
     var pauseLength = Number(localStorage.getItem("pauseLength"));
     var announceWorkout = Number(localStorage.getItem("announceWorkout"));
+    var playSound = Number(localStorage.getItem("playSound"));
 
     if (announceWorkout == 0) {
         $("#workoutBtn").attr('class', 'fa fa-square-o');
     }
     else {
         $("#workoutBtn").attr('class', 'fa fa-check-square-o');
+    }
+
+    if (playSound == 0) {
+        $("#soundBtn").attr('class', 'fa fa-square-o');
+    }
+    else {
+        $("#soundBtn").attr('class', 'fa fa-check-square-o');
     }
 
     var workoutArray = ["Jumping Jacks", "Wall Sit", "Push-Ups", "Abdominal Crunch", "Step Up", "Squat", "Triceps Dip", "Plank", "High Knees", "Lunge", "Push-Up Rotation", "Side Plank", "Change Sides"];
@@ -98,7 +110,7 @@
             var value = Math.round(bar.value() * roundLength);
             if (lastValue != value) {
                 if (current == 1 && value > roundLength - 4) {
-                    beep.play();
+                    if (playSound > 0) beep.play();
                 }
             }
             if (current == 1) {
@@ -121,7 +133,7 @@
 
 
     function toggleWorkout() {
-        console.log("toggle workout.");
+        // console.log("toggle workout.");
         if (announceWorkout > 0) {
             announceWorkout = 0;
             $("#workoutBtn").attr('class', 'fa fa-square-o');
@@ -131,6 +143,19 @@
             $("#workoutBtn").attr('class', 'fa fa-check-square-o');
         }
         localStorage.setItem("announceWorkout", announceWorkout);
+    }
+
+    function toggleSound() {
+        console.log("toggle sound.");
+        if (playSound > 0) {
+            playSound = 0;
+            $("#soundBtn").attr('class', 'fa fa-square-o');
+        }
+        else {
+            playSound = 1;
+            $("#soundBtn").attr('class', 'fa fa-check-square-o');
+        }
+        localStorage.setItem("playSound", playSound);
     }
 
 
@@ -163,10 +188,10 @@
                 $('#workout').text(workoutArray[currentRound]);
             } else $('#workout').text('');
             currentRound++;
-            if (pauseLength > 0 && announceWorkout == 0) beep.play(); // start with a beep only if there was a pause in advance.
+            if (pauseLength > 0 && announceWorkout == 0) if (playSound > 0) beep.play(); // start with a beep only if there was a pause in advance.
             bar.animate(1.0, {duration: roundLength * 1000, color: '#225378'},
                 function () {
-                    tada.play();
+                    if (playSound > 0) tada.play();
                     nextAnimation();
                 });  // Number from 0.0 to 1.0
         } else {
