@@ -7,9 +7,12 @@
 
 
 #container {
-    margin: 16pt;
+    margin-left: 16pt;
+    margin-right: 16pt;
+    margin-bottom: 16pt;
     width: 90%;
     height: 90%;
+    z-index: -1;
 }
 
 #controls {
@@ -21,6 +24,18 @@
     /*color: #F3FFE2;*/
     /*color: #EB7F00;*/
     text-align: center;
+    font-family: "Raleway", "Droid Sans", Helvetica, sans-serif;
+}
+
+.mynav {
+    margin: 3vw;
+    font-size: 6vw;
+    /*color: #ACF0F2;*/
+    /*color: #1695A3;*/
+    color: #225378;
+    /*color: #F3FFE2;*/
+    /*color: #EB7F00;*/
+    text-align: left;
     font-family: "Raleway", "Droid Sans", Helvetica, sans-serif;
 }
 
